@@ -82,9 +82,9 @@
 
   (.registerFileProtocol
    protocol FILE_LSP_SCHEME
-   (fn [^js request callback]
-     (let [url (.-url request)
-           url' ^js (js/URL. url)
+   (fn [^js request callback]  ;; `^` is a `Reader Tag` for ClojureScript, it tell compiler don't optimize away the `js/` prefix
+     (let [url (.-url request) ;; `.-` is purpose to get property of js object, `.-url` is equivalent to `js/request.url`
+           url' ^js (js/URL. url) ;; url' is a js object
            [_ ROOT] (if (string/starts-with? url PLUGIN_URL)
                       [PLUGIN_URL PLUGINS_ROOT]
                       [STATIC_URL js/__dirname])
@@ -93,15 +93,20 @@
            path' (utils/safe-decode-uri-component path')
            path' (.join node-path ROOT path')]
 
-       (callback #js {:path path'}))))
+       (callback #js {:path path'})))) ;; `callback` is extract to js like as `callback({path: path'})`
 
-  #(do
+  ;; below is a `do` expression; 
+  ;; The do expression is a special form in Clojure used to group multiple actions (side-effects) together and execute them in order.
+  ;; The do expression is execute inner function one-by-one and return last expression result.
+  #(do ;; `#(...)` is a `fn` macro; it is equivalent to `(fn [args] ...)`
      (.unregisterProtocol protocol FILE_LSP_SCHEME)
      (.unregisterProtocol protocol FILE_ASSETS_SCHEME)))
 
+;; `defn-` is a macro that defines a private function, can only be used in current namespace.
 (defn- handle-export-publish-assets [_event html repo-path asset-filenames output-path]
-  (p/let [app-path (. app getAppPath)
-          asset-filenames (->> (js->clj asset-filenames) (remove nil?))
+  (p/let [app-path (. app getAppPath) ;; is equivalent to `app.getAppPath`
+          ;; `->>` is a thread macro, it threads the result of the previous expression to the next expression
+          asset-filenames (->> (js->clj asset-filenames) (remove nil?)) ;; `js->clj` is a function that converts js object to clj object
           root-dir (or output-path (handler/open-dir-dialog))]
     (when root-dir
       (publish-export/create-export
