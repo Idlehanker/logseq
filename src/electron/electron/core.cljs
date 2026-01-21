@@ -127,7 +127,7 @@
         quit-dirty-state "set-quit-dirty-state"
         clear-win-effects! (win/setup-window-listeners! win)]
 
-    (doto ipcMain
+    (doto ipcMain ;; `doto` is a macro that is used to perform side effects on an object
       (.handle quit-dirty-state
                (fn [_ dirty?]
                  (vreset! *quit-dirty? (boolean dirty?))))
@@ -229,7 +229,7 @@
   ;; :mainWindow is only used for handling window restoring on second-instance,
   ;; But we already handle window restoring without deeplink.
   ;; https://github.com/glawson/electron-deeplink/blob/73d58edcde3d0e80b1819cd68a0c6e837a9c9258/src/index.ts#L150-L155
-  (-> (Deeplink. #js
+  (-> (Deeplink. #js       ;; `->` is a thread macro, it threads the result of the previous expression to the next expression
                   {:app app
                    :mainWindow nil
                    :protocol LSP_SCHEME
