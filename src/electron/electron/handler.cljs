@@ -116,7 +116,7 @@
 
 (defmethod handle :writeFile [window [_ repo path content]]
   (let [^js Buf (.-Buffer buffer)
-        ^js content (if (instance? js/ArrayBuffer content)
+        ^js content (if (instance? js/ArrayBuffer content) ;; this equivalent to `(instance? js/ArrayBuffer content)`
                       (.from Buf content)
                       content)]
     (try

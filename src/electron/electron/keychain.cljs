@@ -6,7 +6,7 @@
             [electron.logger :as logger]
             [promesa.core :as p]))
 
-(defonce ^:private service-name
+(defonce ^:private service-name ;; private variable named `service-name`
   (delay
     (let [app-name (try (.getName app)
                         (catch :default _ nil))]
