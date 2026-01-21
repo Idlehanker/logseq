@@ -2,16 +2,14 @@
   "Electron logger, do not depends other libs"
   (:require ["electron-log" :as logger]))
 
-
 (defn- transform-args [args]
-  (map #(cond
+  (map #(cond ;; It is a cond expression, it is like as a switch statement
           (or (keyword? %) (map? %) (seq? %))
           (str %)
 
           :else
           %)
        args))
-
 
 (defn debug
   [& args]

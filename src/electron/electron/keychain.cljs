@@ -6,7 +6,7 @@
             [electron.logger :as logger]
             [promesa.core :as p]))
 
-(defonce ^:private service-name ;; private variable named `service-name`
+(defonce ^:private service-name ;; private variable named `service-name` like as `defn-` macro
   (delay
     (let [app-name (try (.getName app)
                         (catch :default _ nil))]
@@ -22,7 +22,7 @@
   []
   (boolean keytar))
 
-(defn <set-password!
+(defn <set-password! ;; `<` indicate used Promesa library, it return a promise
   "Persist `encrypted-text` for the `refresh-token` entry."
   [key encrypted-text]
   (if-let [account (and (supported?) key)]
