@@ -127,13 +127,13 @@
         quit-dirty-state "set-quit-dirty-state"
         clear-win-effects! (win/setup-window-listeners! win)]
 
-    (doto ipcMain ;; `doto` is a macro that is used to perform side effects on an object
+    (doto ipcMain ;; `doto` macro is like as `do`-expression and add `->` macro for chaining calls. It is as javascript `ipcMain.handle().handle()...handle()`
       (.handle quit-dirty-state
-               (fn [_ dirty?]
+               (fn [_ dirty?] ;; is callback function
                  (vreset! *quit-dirty? (boolean dirty?))))
 
       (.handle toggle-win-channel
-               (fn [_ toggle-min?]
+               (fn [_ toggle-min?] ;; is callback function
                  (when-let [active-win (.getFocusedWindow BrowserWindow)]
                    (if toggle-min?
                      (if (.isMinimized active-win)
@@ -160,7 +160,8 @@
                      (catch :default e
                        (logger/error (str call-win-channel " " e))))))))
 
-    #(do (clear-win-effects!)
+    ;;The #() syntax is shorthand for (fn [] ...). If they wrote it without the #(), the code would execute immediately when setup-app-manager! is called. By wrapping it in #(), they are essentially saying: "Don't run this now; give me a 'handle' to run it when I'm ready to shut down."
+    #(do (clear-win-effects!) ;;#( ... ) is an Anonymous Function
          (.removeHandler ipcMain toggle-win-channel)
          (.removeHandler ipcMain export-publish-assets)
          (.removeHandler ipcMain quit-dirty-state)
