@@ -58,7 +58,7 @@
                  ;;  :page-name : the title of the page.
                  ;;  :block-id : uuid.
                  (fn [data]
-                   (let [{:keys [page-name block-id]} (bean/->clj data)]
+                   (let [{:keys [page-name block-id]} (bean/->clj data)] ;; get value of page-name or block-id by keyword(:page-name or :block-id) from data which is a map js object
                      (cond
                        page-name
                        (when (db/get-page page-name)
