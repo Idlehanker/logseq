@@ -25,7 +25,7 @@
 (defonce hashtag "#")
 (defonce command-trigger "/")
 (defonce command-ask "\\")
-(defonce *current-command (atom nil))
+(defonce *current-command (atom nil)) ;; define a mutable variable to store the current command
 
 (def query-doc
   [:div {:on-pointer-down (fn [e] (.stopPropagation e))}
